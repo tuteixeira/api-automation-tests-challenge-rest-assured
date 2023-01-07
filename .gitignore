@@ -3,6 +3,7 @@
 
 .idea/*
 .allure/*
+allure-results/
 
 ### Java ###
 # Compiled class file

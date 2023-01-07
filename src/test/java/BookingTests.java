@@ -34,7 +34,7 @@ public class BookingTests {
                 faker.internet().password(8,10),
                 faker.phoneNumber().toString());
 
-        bookingDates = new BookingDates("2018-01-02", "2018-01-03");
+        bookingDates = new BookingDates("2023-01-28", "2023-03-12");
         booking = new Booking(user.getFirstName(), user.getLastName(),
                 (float)faker.number().randomDouble(2, 50, 100000),
                 true,bookingDates,
@@ -58,7 +58,6 @@ public class BookingTests {
                                         .extract()
                                         .response();
 
-
         Assertions.assertNotNull(response);
         Assertions.assertEquals(200, response.statusCode());
     }
@@ -67,7 +66,7 @@ public class BookingTests {
     public void  getAllBookingsByUserFirstName_BookingExists_returnOk(){
                     request
                         .when()
-                            .queryParam("firstName", "Carol")
+                            .queryParam("firstName", "Tuki")
                             .get("/booking")
                         .then()
                             .assertThat()
@@ -75,13 +74,10 @@ public class BookingTests {
                             .contentType(ContentType.JSON)
                         .and()
                         .body("results", hasSize(greaterThan(0)));
-
     }
 
     @Test
     public void  CreateBooking_WithValidData_returnOk(){
-
-        Booking test = booking;
         given().config(RestAssured.config().logConfig(logConfig().enableLoggingOfRequestAndResponseIfValidationFails()))
                     .contentType(ContentType.JSON)
                         .when()
@@ -94,8 +90,18 @@ public class BookingTests {
                         .statusCode(200)
                         .contentType(ContentType.JSON).and().time(lessThan(2000L));
 
-
-
     }
 
+    @Test
+    public void  DeleteBooking_Forbbiden(){
+        given().config(RestAssured.config().logConfig(logConfig().enableLoggingOfRequestAndResponseIfValidationFails()))
+                    .contentType(ContentType.JSON)
+                        .when()
+                        .delete("/booking/1302")
+                        .then()
+                        .and()
+                        .assertThat()
+                        .statusCode(403)
+                        .contentType(ContentType.TEXT);
+    }
 }
